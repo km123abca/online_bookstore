@@ -1,10 +1,15 @@
 <?php
 
 if(!isset($_SESSION)){ session_start(); }
+if(!isset($_GET['id'])){
+	header("Location:admin.php");
+	exit;
+}
 
 if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 	{
-	 // include "php/func-books.php";
+	 $id=$_GET['id'];
+	 include "php/func-books.php";
 	 include "php/func-author.php";
 	 include "php/func-category.php";
 	 include "php/func-generalhelper.php";
@@ -13,6 +18,8 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 	 // $books=get_all_books($conn);
 	 $authors=get_all_authors($conn);
 	 $categories=get_all_categories($conn);
+
+	 /*
 	 if(isset($_GET['title']))	$title_rec=$_GET['title'];
 	 else $title_rec='';
 	 if(isset($_GET['category'])) $category_rec=$_GET['category'];
@@ -21,6 +28,20 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 	 else $description_rec='';
 	 if(isset($_GET['author'])) $author_rec=$_GET['author'];
 	 else $author_rec='';
+	 */
+
+	 $book=get_book($conn,$id);
+	if($book==0){
+	header("Location:admin.php?error=book_does_not_exist");
+	exit;
+	}
+	else{
+		$id_rec=$book['id'];
+		$title_rec=$book['title'];
+		$description_rec=$book['description'];
+		$category_rec=$book['category_id'];
+		$author_rec=$book['author_id'];
+	}
 
 	 	
 	
@@ -59,10 +80,10 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 			  style="width:90%;max-width: 50rem;"
 			  method="post"
 			  enctype="multipart/form-data"
-			  action="./php/process-book.php"			   
+			  action="./php/update-book.php"			   
 			  >
 			<h1 class="text-center p-5 display-4 fs-3">
-				Add New Book
+				Edit Book
 			</h1>
 <?php 
 		  	if(isset($_GET['error']))
@@ -85,6 +106,7 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 			
 			<div class="mb-3">
 		    <label for="book_title" class="form-label">Book Title</label>
+		    <input type="text" class="form-control" id="book_id" aria-describedby="emailHelp" hidden name="book_id" value="<?=$id_rec?>">
 		    <input type="text" class="form-control" id="book_title" aria-describedby="emailHelp" name="book_title" value="<?=$title_rec?>">
 		    <!-- <div id="emailHelp" class="form-text">So much fun my boy...</div> -->
 		    </div>
@@ -126,11 +148,17 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 		    <label for="book_cover" class="form-label">Book Cover</label>
 		    <input type="file" class="form-control" id="book_cover" aria-describedby="emailHelp" name="book_cover">		    
 		    </div>
+		    <input type="file" class="form-control" id="book_covername" hidden value="<?= $book['cover']?>" aria-describedby="emailHelp" name="book_covername">
+		    <input type="text" hidden value="<?= $book['cover']?>" name="original_cover"/>
+		    <!-- <a href="uploads/cover/<?= $book['cover']?>" class="link-light">Cover File</a> -->
 			<div class="mb-3">
 		    <label for="book_file" class="form-label">Book File</label>
 		    <input type="file" class="form-control" id="book_file" aria-describedby="emailHelp" name="book_file">		    
 		    </div>
-		  <button type="submit" class="btn btn-primary">Add New Book</button>
+		    <input type="file" class="form-control" id="book_filename" hidden value="<?= $book['file']?>" aria-describedby="emailHelp" name="book_filename">
+		    <input type="text" hidden value="<?= $book['file']?>" name="original_file"/>
+		    <!-- <a href="uploads/files/books/<?= $book['file']?>" class="link-light">book File</a> -->
+		  <button type="submit" class="btn btn-primary">Update</button>
 		</form>		
 	</div>
 </body>

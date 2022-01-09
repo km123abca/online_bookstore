@@ -1,10 +1,21 @@
 <?php
 
 if(!isset($_SESSION)){ session_start(); }
+if(!isset($_GET['id'])){
+	header("Location:admin.php");
+	exit;
+}
 
 if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 	{
-	 
+	 $id=$_GET['id'];
+	include "db_conn.php";
+	include "php/func-author.php";
+	$author=get_author($conn,$id);
+	if($author==0){
+	header("Location:admin.php?error=author_does_not_exist");
+	exit;
+	}
 	
 ?>
 <!DOCTYPE html>
@@ -12,13 +23,13 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<title>Add Author</title>
+	<title>Edit Author</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </head>
-<body class="bg-dark text-light">
+<body>
 	<div class="container">
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		  <div class="container-fluid">
 		    <a class="navbar-brand" href="admin.php">Admin</a>
 		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,10 +51,10 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 			  class="shadow rounded p-4 mt-5" 
 			  style="width:90%;max-width: 50rem;"
 			  method="post"
-			  action="./php/process-author.php"			   
+			  action="./php/update-author.php"			   
 			  >
 			<h1 class="text-center p-5 display-4 fs-3">
-				Add New Author
+				Edit Author
 			</h1>
 <?php 
 		  	if(isset($_GET['error']))
@@ -65,11 +76,12 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 ?>
 			
 			<div class="mb-3">
-		    <label for="author" class="form-label">Author</label>
-		    <input type="text" class="form-control" id="author" aria-describedby="emailHelp" name="author">
+		    <label for="author" class="form-label">Author</label>		  
+		    <input type="text" class="form-control" hidden id="author" aria-describedby="emailHelp" name="id" value="<?= $author['id'] ?>">
+		    <input type="text" class="form-control" id="author" aria-describedby="emailHelp" name="author" value="<?= $author['name'] ?>">
 		    <div id="emailHelp" class="form-text">So much fun my boy...</div>
 		  </div>
-		  <button type="submit" class="btn btn-primary">Add New Author</button>
+		  <button type="submit" class="btn btn-primary">Update Author</button>
 		</form>		
 	</div>
 </body>

@@ -1,0 +1,17 @@
+.pdf-list{
+	width:100%;
+}
+.card{
+	/*width: 10rem;*/
+	width: 30%;
+}
+.lb{
+	border:2px solid white;
+}
+.fw{
+	width:100%;
+}
+.imgrest{
+	width:300px;
+	height:300px;
+}

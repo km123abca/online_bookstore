@@ -1,0 +1,4 @@
+./uploads/cover/61bd4fb5f325f5.56969835.png will be unlinked
+../uploads/cover/61bd50295cffc1.51024050.jpg will be unlinked
+../uploads/files/books/61b5e6e96f4a53.90163045.pdf will be unlinked
+SELECT * FROM books WHERE category_id=1

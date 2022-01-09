@@ -1,12 +1,16 @@
 <?php
 if(!isset($_SESSION)){ session_start(); }
-
+if(!isset($_GET['key']) || empty($_GET['key'])) {
+	header("Location:index.php");
+	exit;
+}
+$key=$_GET['key'];
 include "php/func-books.php";
 include "php/func-author.php";
 include "php/func-category.php";
 include "php/func-generalhelper.php";
 include "db_conn.php";
-$books=get_all_booksv2($conn);
+$books=search_books($conn,$key);
 $authors=get_all_authors($conn);
 $categories=get_all_categories($conn);
 ?>
@@ -49,34 +53,18 @@ $categories=get_all_categories($conn);
 		        			}
 		        	?>
 		        	
-		        </li>
-
-		        <?php
-		        if(isset($_SESSION['user_id'])){
-		        ?> 
-		        <li class="nav-item">
-		       	<a class="nav-link" href="logout.php">Logout</a>
-		       	</li> 
-		        <?php
-		        } 
-		        ?>
-
+		        </li>		        
 		      </ul>		      
 		    </div>
 		  </div>
 		</nav>
-		<form  style="width:'100%';max-width: 30rem;" action="search.php" method="get" >
-			<div class="input-group mt-5">
-			  <input type="text" name="key" class="form-control" placeholder="Search Book..." aria-label="Search Book..." aria-describedby="basic-addon2">
-			  <button class="input-group-text btn btn-primary" id="basic-addon2">Search</button>
-			</div>
-		</form>
+		<span class="text-light"> Search Results for:<b> <?= $key ?> </b></span>
 		<div class='d-flex'>
 			<?php if($books==0)
 				{
 			?>
 			<div class="text-center p-5 text-light fw" role="alert">
-				There are no books here
+				There are no books that match your search string
 			</div>
 			<?php
 				 }

@@ -15,7 +15,7 @@ function upload_file($files,$allowed_exs,$path)
 				$file_upload_path="../uploads/".$path.''.$new_file_name;
 				move_uploaded_file($tmp_name, $file_upload_path);
 				$sm['status']='success';
-				$sm['data']=$new_file_name.' uploaded successfully';	
+				$sm['data']=$new_file_name;	
 				return $sm;
 			}
 			else
@@ -32,3 +32,18 @@ function upload_file($files,$allowed_exs,$path)
 			return $em;
 		}
 	}
+
+function upload_file_higher($thefile,$allowed_exs,$path,$redirectlink){
+	// $book_cover=upload_file($_FILES['book_cover'],$allowed_exs,$path);
+	//redirectlink='Location:../add-book.php'
+	$uploaded_content=upload_file($thefile,$allowed_exs,$path);
+	if($uploaded_content['status']=="error")
+ 			{
+ 				$em=$uploaded_content['data'];
+ 				$stat=$uploaded_content['status'];
+ 				
+ 				header($redirectlink.'?error='.$em);
+ 				exit;
+ 			}
+ 		return $uploaded_content['data'];
+}

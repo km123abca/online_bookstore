@@ -19,3 +19,15 @@ function get_category_with_id($categories,$id)
 		}
 		return "Unknown";
 	}
+
+function store2debug($contentt,$fil="debug.txt")
+  {
+  // $fil='boxes/'.$fil;
+  $file_save=fopen($fil,"a+");
+  flock($file_save,LOCK_EX);
+  fputs($file_save,$contentt."\n");
+  // store2debug('uploading resulted in error');
+  flock($file_save,LOCK_UN);
+  fclose($file_save);
+  }
+

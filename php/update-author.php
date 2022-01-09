@@ -1,35 +1,36 @@
 <?php
-
+include "func-generalhelper.php";
 if(!isset($_SESSION)){ session_start(); }
 if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 {
 
  include "../db_conn.php";
- if(isset($_POST['category']))
+ if(isset($_POST['id']))
  	{
- 		$name=$_POST['category'];
- 		if(empty($name))
+ 		$name=$_POST['author'];
+ 		$id=$_POST['id'];
+ 		if(empty($name) || empty($id))
  			{
- 				$em="The category name is required";
- 				header("Location:../add-category.php?error=$em");
+ 				$em="The author name is required";
+ 				header("Location:../edit-author.php?error=$em");
  				exit;
  			}
  		else
- 			{
- 				
- 				$sql="INSERT INTO categories (name) VALUES (?)";
+ 			{ 				
+ 				$sql="UPDATE author SET name=? WHERE id=?";
  				$stmt=$conn->prepare($sql);
- 				$res=$stmt->execute([$name]);	
+ 				$res=$stmt->execute([$name,$id]);	
  				if($res)
  					{
-	  				$sm="Category successfully created";
-	 				header("Location:../add-category.php?success=$sm");
+
+	  				$sm="author successfully updated";
+	 				header("Location:../edit-author.php?success=$sm&id=$id");
 	 				exit;
  					}
  				else
  					{
 	  				$em="Error while accessing db";
-	 				header("Location:../add-category.php?error=$em");
+	 				header("Location:../edit-author.php?error=$em&id=$id");
 	 				exit;
  					}
  			}

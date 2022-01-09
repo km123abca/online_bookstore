@@ -25,9 +25,9 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </head>
-<body>
+<body class='bg-dark'>
 	<div class="container">
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		  <div class="container-fluid">
 		    <a class="navbar-brand" href="admin.php">Admin</a>
 		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,17 +44,46 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 		    </div>
 		  </div>
 		</nav>
+<form  style="width:'100%';max-width: 30rem;" action="search.php" method="get" >
+	<div class="input-group mt-5">
+	  <input type="text" name="key" class="form-control" placeholder="Search Book..." aria-label="Search Book..." aria-describedby="basic-addon2">
+	  <button class="input-group-text btn btn-primary" id="basic-addon2">Search</button>
+	</div>
+</form>
 		<?php
+		if(isset($_GET['error']))
+		{
+?>
+		  		<div class="alert alert-danger" role="alert">
+			  	<?=htmlspecialchars($_GET['error']);?>
+			    </div>
+<?php
+		}
+				else if(isset($_GET['success']))
+				{
+?>
+		  		<div class="alert alert-success" role="alert">
+			  	<?=htmlspecialchars($_GET['success']);?>
+			    </div>					
+<?php 
+				}
+
+
 		if($books ==0) { 
 		?>
-		<h1>No Books Found</h1> 
+		<div class="alert alert-warning text-center p-5" role="alert">
+			  	No books in the database
+		</div>	
+		<img src="./images/solaire.png" alt="no image"/>
 		<?php
 		}
 		else
 		{
+
 		?>	
+
 		<h4 class="mt-5">All Books</h4>
-		<table class="table table-bordered shadow">
+		<table class="table table-dark table-bordered shadow">
 			<thead>
 				<tr>
 					<th>#</th>
@@ -75,8 +104,8 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 				<tr>
 					<td><?=$i?></td>
 					<td> 
-						<img src="uploads/cover/<?=$book['cover']?>" width="100" />
-						<a href="uploads/files/books/<?=$book['file']?>" class="link-dark d-block text-center">
+						<img src="uploads/cover/<?=$book['cover']?>" width="150" height="150"/>
+						<a href="uploads/files/books/<?=$book['file']?>" class="link-light text-decoration-none d-block text-center" target="blank">
 						<?=$book['title']?> 
 						</a>
 					</td>
@@ -84,8 +113,8 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 					<td class="d-sm-block d-none"> <?=$book['description']?> </td>
 					<td> <?=get_category_with_id($categories,$book['category_id'])?> </td>
 					<td>
-						<a href="#" class="btn btn-warning mr-10">Edit</a>
-						<a href="#" class="btn btn-danger">Delete</a>
+						<a href="edit-book.php?id=<?= $book['id'] ?>" class="btn btn-warning mr-10">Edit</a>
+						<a href="./php/func-deletebook.php?id=<?= $book['id'] ?>" class="btn btn-danger">Delete</a>
 					</td>
 				</tr>
 		<?php
@@ -101,14 +130,16 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 		if($categories==0)
 			{
 		?>  
-			 <h4>No Categories found</h4>
+			 <div class="alert alert-warning text-center p-5" role="alert">
+			  	No Categories found
+			</div>
 		<?php
 			}
 		else
 			{
 		?>
 			 <h4 class="mt-5">All categories</h4>
-			 <table class="table table-bordered shadow">
+			 <table class="table table-dark table-bordered shadow">
 			 	<thead>
 			 		<tr>
 			 			<th>#</th>
@@ -127,8 +158,8 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 			 			<td><?= $j?></td>
 			 			<td><?= $category['name']?></td>
 			 			<td>
-						<a href="#" class="btn btn-warning mr-10">Edit</a>
-						<a href="#" class="btn btn-danger">Delete</a>
+						<a href="edit-category.php?id=<?= $category['id'] ?>" class="btn btn-warning mr-10">Edit</a>
+						<a href="php/func-delete-category.php?id=<?= $category['id'] ?>" class="btn btn-danger">Delete</a>
 						</td>
 			 			</tr>
 		<?php
@@ -142,7 +173,9 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 		if($authors==0)
 		{
 		?>
-			<h4 class="mt-5">No authors found</h4>
+			<div class="alert alert-warning text-center p-5" role="alert">
+			  	No authors found
+			</div>
 		<?php
 		}
 		else
@@ -150,7 +183,7 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 			
 		?>
 			<h4 class="mt-5">Authors</h4>
-			<table class="table table-bordered shadow">
+			<table class="table table-dark table-bordered shadow">
 		 	<thead>
 		 		<tr>
 		 			<th>#</th>
@@ -169,8 +202,8 @@ if( true  && (isset($_SESSION['user_id']) && isset($_SESSION['user_email']) ))
 	 			<td><?= $k?></td>
 	 			<td><?= $author['name']?></td>
 	 			<td>
-				<a href="#" class="btn btn-warning mr-10">Edit</a>
-				<a href="#" class="btn btn-danger">Delete</a>
+				<a href="edit-author.php?id=<?= $author['id'] ?>" class="btn btn-warning mr-10">Edit</a>
+				<a href="php/func-delete-author.php?id=<?= $author['id'] ?>" class="btn btn-danger">Delete</a>
 				</td>
 	 			</tr>
 	 	<?php
